@@ -28,7 +28,7 @@ type cepRequest struct {
 type viaCEPResp struct {
     Localidade string `json:"localidade"`
     UF         string `json:"uf"`
-    Erro       bool   `json:"erro"`
+    Erro       string `json:"erro"`
 }
 
 type weatherResp struct {
@@ -124,7 +124,7 @@ func lookupCity(ctx context.Context, cep string) (string, string, error) {
         span.RecordError(err)
         return "", "", err
     }
-    if v.Erro || v.Localidade == "" {
+    if v.Erro == "true" || v.Localidade == "" {
         return "", "", errNotFound
     }
     span.SetAttributes(attribute.String("city", v.Localidade), attribute.String("uf", v.UF))
